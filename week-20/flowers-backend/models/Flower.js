@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const flowerSchema = new mongoose.Schema({
-  id: Number,
+  id: String,
   name: {
     type: String,
     required: true

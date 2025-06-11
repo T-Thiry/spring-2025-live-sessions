@@ -4,7 +4,7 @@ import listEndpoints from "express-list-endpoints"
 import mongoose from "mongoose"
 import { Flower } from "./models/Flower.js"
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/flowers-database"
+const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/flowers-tuesday-session"
 mongoose.connect(mongoUrl)
 
 const port = process.env.PORT || 8080
@@ -108,6 +108,23 @@ app.post("/flowers", async (req, res) => {
       response: error, //Be careful when returning error messages to the client, so that you don't expose sensitive information
       message: "Couldn't create flower"
     })
+  }
+})
+
+// PATCH TO EDIT FLOWER
+app.patch("/flowers/:id", async (req, res) => {
+  const { id } = req.params
+  const { name } = req.body
+
+  try {
+    const editFlower = await Flower.findByIdAndUpdate( id, { name: name }, 
+      { new: true, runValidators: true } )
+      if (!editFlower) {
+        return res.status(404).json({ error: "flower not found"})
+      }
+      res.status(201).json(editFlower)
+  } catch (err) {
+    res.status(500).json(err)
   }
 })
 
