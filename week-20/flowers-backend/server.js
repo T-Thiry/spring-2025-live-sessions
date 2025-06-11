@@ -2,7 +2,10 @@ import cors from "cors"
 import express from "express"
 import listEndpoints from "express-list-endpoints"
 import mongoose from "mongoose"
+
 import { Flower } from "./models/Flower.js"
+import { User } from "./models/user.js"
+import { postUser } from "./utils/postUser.js"
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/flowers-tuesday-session"
 mongoose.connect(mongoUrl)
@@ -42,6 +45,7 @@ app.get("/flowers", async (req, res) => {
   try {
     const filteredFlowers = await Flower.find(query)
 
+
     if (filteredFlowers.length === 0) {
       return res.status(404).json({
         success: false,
@@ -52,6 +56,41 @@ app.get("/flowers", async (req, res) => {
     res.status(200).json({
       success: true,
       response: filteredFlowers,
+      message: "Success"
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      response: error,
+      message: "Failed to fetch flowers"
+    })
+  }
+})
+
+app.get("/flowers/sort", async (req, res) => {
+  const { name } = req.params
+
+  //localhost:8080/flowers/sort?name=asc
+  //localhost:8080/flowers/sort?name=desc
+  
+  const sortCriteriaAsc = {name: "asc"} //{[name]: name === 'asc' ? 1: -1}
+  //const sortCriteriaDesc = {name: "desc"}
+
+
+  try {
+    const sortedFlowers = await Flower.find().sort(sortCriteriaAsc)
+
+
+    if (sortedFlowers.length === 0) {
+      return res.status(404).json({
+        success: false,
+        response: [],
+        message: "No flowers found for that query. Try another one."
+      })
+    }
+    res.status(200).json({
+      success: true,
+      response: sortedFlowers,
       message: "Success"
     })
   } catch (error) {
@@ -111,6 +150,7 @@ app.post("/flowers", async (req, res) => {
   }
 })
 
+
 // PATCH TO EDIT FLOWER
 app.patch("/flowers/:id", async (req, res) => {
   const { id } = req.params
@@ -128,6 +168,11 @@ app.patch("/flowers/:id", async (req, res) => {
   }
 })
 
+//This will create a user
+app.post("/users", postUser)
+
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
 })
+
