@@ -3,6 +3,8 @@ import express from "express"
 import listEndpoints from "express-list-endpoints"
 import mongoose from "mongoose"
 import { Flower } from "./models/Flower.js"
+import { User } from "./models/user.js"
+import { postUser } from "./utils/postUser.js"
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/flowers-database"
 mongoose.connect(mongoUrl)
@@ -111,6 +113,10 @@ app.post("/flowers", async (req, res) => {
   }
 })
 
+//This will create a user
+app.post("/users", postUser)
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
 })
+
