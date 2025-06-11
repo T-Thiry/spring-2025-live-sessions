@@ -42,7 +42,7 @@ const FlowerCard = ({ flower }) => {
         <Typography variant="h6" component="h3" gutterBottom>
           {flower.name}
         </Typography>
-        <EditButton />
+        <EditButton id={flower.id}/>
         <Box sx={styles.chipContainer}>
           <Chip
             label={flower.color}
