@@ -18,15 +18,14 @@ const LoginForm = () => {
 
     setError("");
 
-    console.log(formData); //Maybe sending the error made it not work?
-    // have we pushed?
+    console.log(formData);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h1>LOG IN</h1>
-      {error && <div style={{ color: "red" }}>{error}</div>} HAHAAHAHAHHA HOW DO
-      I WRITE A FKING COMMENT
+      {error && <div style={{ color: "red" }}>{error}</div>}HAHAH så kul att det
+      är h1:or också hahaha
       <label htmlFor="username">Username</label>
       <input
         onChange={(e) => setFormData({ ...formData, username: e.target.value })}
