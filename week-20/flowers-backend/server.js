@@ -150,8 +150,27 @@ app.post("/flowers", async (req, res) => {
   }
 })
 
+
+// PATCH TO EDIT FLOWER
+app.patch("/flowers/:id", async (req, res) => {
+  const { id } = req.params
+  const { name } = req.body
+
+  try {
+    const editFlower = await Flower.findByIdAndUpdate( id, { name: name }, 
+      { new: true, runValidators: true } )
+      if (!editFlower) {
+        return res.status(404).json({ error: "flower not found"})
+      }
+      res.status(201).json(editFlower)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
 //This will create a user
 app.post("/users", postUser)
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
