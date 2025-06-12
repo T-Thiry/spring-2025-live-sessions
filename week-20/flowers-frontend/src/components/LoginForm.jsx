@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -11,27 +11,40 @@ const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.username || !formData.password) {
+    if (!formData.email || !formData.password) {
       setError("Please fill in both fields");
       return;
     }
 
     setError("");
 
-    console.log(formData);
+    fetch("http://localhost:8080/users/login", {
+      method: "POST",
+      body: JSON.stringify({ email: formData.email, password: formData.password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(() => {
+        // Reset form
+        e.target.reset()
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h1>LOG IN</h1>
-      {error && <div style={{ color: "red" }}>{error}</div>}HAHAH så kul att det
-      är h1:or också hahaha
-      <label htmlFor="username">Username</label>
+      {error && <div style={{ color: "red" }}>{error}</div>}
+      <label htmlFor="email">Email</label>
       <input
-        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-        type="text"
-        name="username"
-        value={formData.username}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        type="email"
+        name="email"
+        value={formData.email}
       />
       <label htmlFor="password">Password</label>
       <input
